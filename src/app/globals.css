@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+/*
+  Supportive HR Solutions — brand theme
+  Primary: Cyprus / deep green (#004741)
+  Background: Sand (#F0EDE4)
+*/
+
+@theme inline {
+  --color-cyprus: #004741;
+  --color-cyprus-dark: #00332e;
+  --color-cyprus-light: #0b5c53;
+  --color-forest: #123f39;
+  --color-leaf: #6fa37a;
+  --color-leaf-dark: #4e8a5c;
+  --color-sand: #f0ede4;
+  --color-sand-dark: #e7e2d4;
+  --color-cream: #faf8f2;
+  --color-ink: #16302c;
+  --color-muted: #5f716b;
+  --color-line: #ddd8c8;
+  --color-line-dark: #c9c3b1;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  --shadow-soft: 0 1px 2px rgba(0, 51, 46, 0.04), 0 12px 32px -18px rgba(0, 51, 46, 0.28);
+  --shadow-card: 0 1px 2px rgba(0, 51, 46, 0.05), 0 20px 45px -28px rgba(0, 51, 46, 0.35);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-sand);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    color: var(--color-cyprus);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-cyprus) 85%, black);
+    color: var(--color-sand);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cyprus);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+}
+
+@layer utilities {
+  .container-x {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 80rem;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-x {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-x {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Organic leaves / curves used for decorative brand shapes. */
+  .brand-blob {
+    border-radius: 62% 38% 47% 53% / 55% 52% 48% 45%;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Respect reduced-motion preferences everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Simple, dependency-free prose styling for article/service content. */
+.prose-custom {
+  color: var(--color-ink);
+  line-height: 1.75;
+}
+
+.prose-custom h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-custom h3 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-custom p {
+  margin-bottom: 1rem;
+}
+
+.prose-custom ul {
+  list-style: disc;
+  padding-left: 1.35rem;
+  margin-bottom: 1rem;
+}
+
+.prose-custom li {
+  margin-bottom: 0.35rem;
+}
+
+.prose-custom a {
+  color: var(--color-cyprus);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.prose-custom strong {
+  color: var(--color-cyprus-dark);
+  font-weight: 600;
+}
