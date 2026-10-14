@@ -11,7 +11,6 @@ import { ConfirmSubmit } from "@/components/admin/confirm-submit";
 import { AdminPageHeader, AdminPanel, StatusPill } from "@/components/admin/ui";
 import { buttonClasses } from "@/components/ui/button";
 import { db } from "@/lib/db";
-import { formatDate } from "@/lib/utils";
 
 export default async function AdminResourcesPage({
   searchParams,

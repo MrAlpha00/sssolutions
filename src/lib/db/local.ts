@@ -165,8 +165,6 @@ async function remove(collection: Collection, id: ID): Promise<void> {
   });
 }
 
-type BaseRecordFields = "id" | "created_at" | "updated_at";
-
 export const localStore: DataStore = {
   kind: "local",
 

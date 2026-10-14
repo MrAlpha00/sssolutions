@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Clock, Mail, MapPin, Menu, Phone, X } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { MapPin, Menu, Phone, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";

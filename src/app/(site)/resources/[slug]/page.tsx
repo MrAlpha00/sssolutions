@@ -7,6 +7,7 @@ import { PageHero } from "@/components/site/page-hero";
 import { Prose } from "@/components/site/prose";
 import { ResourceCard } from "@/components/site/resource-card";
 import { Section } from "@/components/ui/container";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { getPostBySlug, getPosts, getSettings } from "@/lib/content";
 import { articleJsonLd, createMetadata } from "@/lib/seo";
 import { resolveSiteView } from "@/lib/site-view";
@@ -91,6 +92,23 @@ export default async function ResourceDetailPage({ params }: Params) {
           </div>
         </div>
       </Section>
+
+      {more.length > 0 ? (
+        <Section tone="cream">
+          <SectionHeading eyebrow="Keep reading" title="More resources" />
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {more.map((item) => (
+              <ResourceCard key={item.id} post={item} />
+            ))}
+          </div>
+        </Section>
+      ) : null}
+
+      <CallToActionBand
+        view={view}
+        title="Want help applying this in your organisation?"
+        description="Tell us what you are working on and we will suggest a practical next step."
+      />
     </>
   );
 }

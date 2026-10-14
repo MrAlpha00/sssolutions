@@ -4,7 +4,7 @@ import { Check, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import { CheckboxField, Field, FormAlert, Honeypot } from "./form-fields";
+import { CheckboxField, FormAlert, Honeypot } from "./form-fields";
 import { TurnstileWidget } from "./turnstile";
 import { useFormSubmit } from "./use-form-submit";
 
