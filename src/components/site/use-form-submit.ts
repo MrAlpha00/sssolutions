@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 
 export type SubmitState = {
-  status: "idle" | "submitting" | "success";
+  status: "idle" | "submitting" | "success" | "error";
   error: string | null;
 };
 
@@ -17,7 +17,6 @@ export function useFormSubmit(endpoint: string) {
     status: "idle",
     error: null,
   });
-
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;

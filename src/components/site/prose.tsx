@@ -13,15 +13,18 @@ import { cn } from "@/lib/utils";
 
 function renderInline(text: string, keyPrefix: string): ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
-  return parts
-    .map((part, index) => {
-      if (!part) return null;
-      if (part.startsWith("**") && part.endsWith("**")) {
-        return <strong key={`${keyPrefix}-b-${index}`}>{part.slice(2, -2)}</strong>;
-      }
-      return <span key={`${keyPrefix}-t-${index}`}>{part}</span>;
-    })
-    .filter((node): node is ReactNode => node !== null);
+  const nodes: ReactNode[] = [];
+  parts.forEach((part, index) => {
+    if (!part) return;
+    if (part.startsWith("**") && part.endsWith("**")) {
+      nodes.push(
+        <strong key={`${keyPrefix}-b-${index}`}>{part.slice(2, -2)}</strong>,
+      );
+      return;
+    }
+    nodes.push(<span key={`${keyPrefix}-t-${index}`}>{part}</span>);
+  });
+  return nodes;
 }
 
 export function Prose({

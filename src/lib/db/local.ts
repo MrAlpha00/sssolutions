@@ -120,10 +120,9 @@ function list<T extends { created_at: string; order_index?: number }>(
   return [...items].sort(byOrder);
 }
 
-async function insert<T extends { id: ID }>(
-  collection: Collection,
-  input: Omit<T, keyof BaseRecordFields>,
-): Promise<T> {
+async function insert<
+  T extends { id: ID; created_at: string; updated_at: string },
+>(collection: Collection, input: New<T>): Promise<T> {
   return withLock(async () => {
     const db = await readDb();
     const record = {
@@ -138,11 +137,9 @@ async function insert<T extends { id: ID }>(
   });
 }
 
-async function patch<T extends { id: ID }>(
-  collection: Collection,
-  id: ID,
-  input: Partial<Omit<T, keyof BaseRecordFields>>,
-): Promise<T> {
+async function patch<
+  T extends { id: ID; created_at: string; updated_at: string },
+>(collection: Collection, id: ID, input: Edit<T>): Promise<T> {
   return withLock(async () => {
     const db = await readDb();
     const arr = db[collection] as unknown as T[];
