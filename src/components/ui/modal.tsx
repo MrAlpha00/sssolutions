@@ -2,7 +2,14 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 
 import { buttonClasses } from "@/components/ui/button";
@@ -30,12 +37,17 @@ export function Modal({
   panelClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const reduce = useReducedMotion();
   const panelRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
-  useEffect(() => setMounted(true), []);
+  // `false` during server rendering and the first client render, then `true`.
+  // Avoids a hydration mismatch without setting state from an effect.
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const close = useCallback(() => setOpen(false), []);
 

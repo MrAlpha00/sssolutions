@@ -27,14 +27,21 @@ export function SiteHeader({
   const [scrolled, setScrolled] = useState(false);
   const reduce = useReducedMotion();
 
+  // Close the mobile menu whenever the route changes. Adjusting state during
+  // render (rather than in an effect) is React's recommended pattern here and
+  // avoids a cascading re-render after navigation.
+  const [lastPath, setLastPath] = useState(pathname);
+  if (lastPath !== pathname) {
+    setLastPath(pathname);
+    if (open) setOpen(false);
+  }
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
