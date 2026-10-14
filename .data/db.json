@@ -352,7 +352,31 @@
     }
   ],
   "jobs": [],
-  "contact_submissions": [],
-  "newsletter_subscribers": [],
+  "contact_submissions": [
+    {
+      "full_name": "Smoke Test",
+      "email": "smoke@example.com",
+      "phone": "+91 90000 00000",
+      "company": "Test Co",
+      "service_interest": "recruitment-and-staffing",
+      "message": "This is a smoke test enquiry message.",
+      "status": "new",
+      "email_sent": false,
+      "id": "e949b109-5d43-4747-9360-1e4f4923d86d",
+      "created_at": "2026-10-14T14:55:08.454Z",
+      "updated_at": "2026-10-14T14:55:08.454Z"
+    }
+  ],
+  "newsletter_subscribers": [
+    {
+      "email": "subscriber@example.com",
+      "status": "subscribed",
+      "consent": true,
+      "source": "website",
+      "id": "1dbd80f2-7ce3-47dd-92d2-9f85fee152be",
+      "created_at": "2026-10-14T14:55:08.508Z",
+      "updated_at": "2026-10-14T14:55:08.508Z"
+    }
+  ],
   "job_applications": []
 }
