@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { useActionState, type ReactNode } from "react";
 
 import { Button, ButtonLink } from "@/components/ui/button";
@@ -160,6 +160,16 @@ export function AdminForm({
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
           {state.error}
+        </p>
+      ) : null}
+
+      {state && state.ok ? (
+        <p
+          role="status"
+          className="flex items-center gap-2 rounded-xl border border-leaf/40 bg-leaf/10 px-4 py-3 text-sm text-cyprus"
+        >
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          Your changes have been saved.
         </p>
       ) : null}
 
