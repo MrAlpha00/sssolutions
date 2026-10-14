@@ -5,6 +5,8 @@ import { LoginForm } from "@/components/admin/login-form";
 import { BrandLogo } from "@/components/ui/logo";
 import { getAdminSession, usingDevCredentials } from "@/lib/auth/session";
 
+export const instant = false;
+
 export const metadata = {
   title: "Admin sign in",
   robots: { index: false, follow: false },

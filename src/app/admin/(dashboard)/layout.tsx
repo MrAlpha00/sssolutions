@@ -9,6 +9,8 @@ import { logoutAction } from "@/lib/auth/actions";
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 
+export const instant = false;
+
 export const metadata = {
   title: "Admin",
   robots: { index: false, follow: false },
