@@ -52,7 +52,7 @@ export default async function AdminSettingsPage() {
       label: "Calendly URL",
       type: "url",
       fullWidth: true,
-      hint: "When set, “Book a Consultation” opens the Calendly popup. Leave blank to send visitors to the contact page instead.",
+      hint: "“Book a Consultation” opens this link in the Calendly popup. Leave blank to use the built-in default (src/lib/site-config.ts). If Calendly cannot load, visitors are sent to the contact page.",
       defaultValue: settings.calendly_url,
     },
     {
