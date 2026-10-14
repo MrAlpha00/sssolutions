@@ -1,5 +1,5 @@
 import { Download } from "lucide-react";
-import { connection } from "next/server";
+import { requireAdmin } from "@/lib/auth/session";
 
 import {
   deleteApplicationAction,
@@ -15,7 +15,7 @@ import { formatDate } from "@/lib/utils";
 const statuses = ["new", "reviewing", "shortlisted", "rejected"] as const;
 
 export default async function AdminApplicationsPage() {
-  await connection();
+  await requireAdmin();
   const applications = await db.listApplications();
 
   return (

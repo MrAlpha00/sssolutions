@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { connection } from "next/server";
+import { requireAdmin } from "@/lib/auth/session";
 
 import {
   deleteJobAction,
@@ -17,7 +17,7 @@ export default async function AdminJobsPage({
 }: {
   searchParams: Promise<{ edit?: string }>;
 }) {
-  await connection();
+  await requireAdmin();
   const { edit } = await searchParams;
   const jobs = await db.listJobs();
   const editing =

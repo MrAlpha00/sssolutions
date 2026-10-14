@@ -1,4 +1,4 @@
-import { connection } from "next/server";
+import { requireAdmin } from "@/lib/auth/session";
 
 import { updateSettingsAction } from "@/app/admin/actions";
 import { AdminForm, type AdminField } from "@/components/admin/admin-form";
@@ -6,7 +6,7 @@ import { AdminPageHeader, AdminPanel } from "@/components/admin/ui";
 import { db } from "@/lib/db";
 
 export default async function AdminSettingsPage() {
-  await connection();
+  await requireAdmin();
   const settings = await db.getSettings();
 
   const highlightsValue = settings.highlights

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { connection } from "next/server";
+import { requireAdmin } from "@/lib/auth/session";
 
 import {
   deletePartnerAction,
@@ -17,7 +17,7 @@ export default async function AdminPartnersPage({
 }: {
   searchParams: Promise<{ edit?: string }>;
 }) {
-  await connection();
+  await requireAdmin();
   const { edit } = await searchParams;
   const partners = await db.listPartners();
   const editing =
