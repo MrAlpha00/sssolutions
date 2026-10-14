@@ -98,8 +98,8 @@ export function resolveSiteView(settings: SiteSettings): SiteView {
         "Building Strong Teams. Creating Better Workplaces.",
       ),
       description: pick(settings.hero_description, siteConfig.description),
-      primaryCta: pick(settings.hero_primary_cta, siteConfig.cta.primary),
-      secondaryCta: pick(settings.hero_secondary_cta, siteConfig.cta.secondary),
+      primaryCta: pick(settings.hero_primary_cta, "Explore Our Services"),
+      secondaryCta: pick(settings.hero_secondary_cta, "Book a Consultation"),
     },
     highlights: (settings.highlights ?? []).filter((item) =>
       Number.isFinite(item.value),

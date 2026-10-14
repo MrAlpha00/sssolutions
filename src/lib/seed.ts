@@ -377,6 +377,6 @@ export const defaultSettings: SiteSettings = {
   hero_description:
     "Supportive HR Solutions helps businesses strengthen their workforce through recruitment, payroll support, HR compliance, employee engagement, and tailored people-management solutions.",
   hero_primary_cta: "Explore Our Services",
-  hero_secondary_cta: "About Us",
+  hero_secondary_cta: "Book a Consultation",
   highlights: [],
 };
