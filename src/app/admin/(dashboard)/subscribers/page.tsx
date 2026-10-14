@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { requireAdmin } from "@/lib/auth/session";
 
 import {
@@ -12,6 +13,7 @@ import { db } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 
 export default async function AdminSubscribersPage() {
+  await connection();
   await requireAdmin();
   const subscribers = await db.listSubscribers();
 

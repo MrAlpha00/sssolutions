@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { requireAdmin } from "@/lib/auth/session";
 
 import {
@@ -14,6 +15,7 @@ import { formatDate } from "@/lib/utils";
 const statuses = ["new", "contacted", "resolved"] as const;
 
 export default async function AdminEnquiriesPage() {
+  await connection();
   await requireAdmin();
   const enquiries = await db.listContactSubmissions();
 

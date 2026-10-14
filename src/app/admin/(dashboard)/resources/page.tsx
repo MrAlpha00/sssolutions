@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { requireAdmin } from "@/lib/auth/session";
 
 import {
@@ -17,6 +18,7 @@ export default async function AdminResourcesPage({
 }: {
   searchParams: Promise<{ edit?: string }>;
 }) {
+  await connection();
   await requireAdmin();
   const { edit } = await searchParams;
   const posts = await db.listPosts();

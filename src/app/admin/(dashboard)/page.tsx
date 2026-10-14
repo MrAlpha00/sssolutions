@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { connection } from "next/server";
 import { requireAdmin } from "@/lib/auth/session";
 
 import { AdminPageHeader, AdminPanel, StatusPill } from "@/components/admin/ui";
@@ -8,6 +9,7 @@ import { db } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 
 export default async function AdminOverviewPage() {
+  await connection();
   await requireAdmin();
 
   const [stats, enquiries, applications] = await Promise.all([
