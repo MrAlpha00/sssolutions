@@ -103,7 +103,7 @@ variables. Copy `.env.example` to `.env.local` and fill in what you have.
 | `CONTACT_TO_EMAIL` | for email | Where notifications are delivered |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | for captcha | Turnstile widget key |
 | `TURNSTILE_SECRET_KEY` | for captcha | Server-side Turnstile verification |
-| `NEXT_PUBLIC_CALENDLY_URL` | no | Enables the Calendly booking popup |
+| `NEXT_PUBLIC_CALENDLY_URL` | no | Overrides the default Calendly link (see `site-config.ts`) |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | no | Overrides the WhatsApp number |
 | `ADMIN_EMAIL` | production | Admin login email |
 | `ADMIN_PASSWORD_HASH` | production | `npm run hash-password "…"` |
@@ -164,7 +164,7 @@ server-side in this order:
 | --- | --- | --- |
 | Email (Resend) | `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CONTACT_TO_EMAIL` | Verify a sending domain |
 | Captcha | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile keys |
-| Calendly | `NEXT_PUBLIC_CALENDLY_URL` or admin → Settings | The real scheduling link |
+| Calendly | `src/lib/site-config.ts` (default) or `NEXT_PUBLIC_CALENDLY_URL` / admin → Settings | A working scheduling link; buttons fall back to /contact if it fails to load |
 | Supabase | `NEXT_PUBLIC_SUPABASE_*`, `SUPABASE_SERVICE_ROLE_KEY` | Project URL + keys |
 | Google Maps | none | Uses an embed with no API key; the address must be correct |
 | Social profiles | Website settings → social URLs | Real profile URLs. Links are **hidden** until set — none are invented. |
@@ -193,7 +193,7 @@ marked with `TODO` comments in the source.
 | Testimonials | None published (honest empty state) | — |
 | Highlight figures | None published (numbers hidden until verified) | Settings → Highlight figures |
 | Business hours | Hidden until confirmed | Settings |
-| Calendly link | Not set (buttons fall back to contact) | Settings |
+| Calendly link | Set in `src/lib/site-config.ts` (`vercelsupa/30min`) — confirm this is the intended booking calendar | `site-config.ts` / Settings |
 | Managing director's email | Card email was a placeholder and is **not** used on the site | — |
 
 No statistics, testimonials, guarantees, certifications, or partner logos were

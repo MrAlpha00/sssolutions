@@ -104,23 +104,26 @@ export function BookButton({
   fallbackHref?: string;
 }) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleClick = useCallback(async () => {
     if (!url) return;
     setLoading(true);
     try {
       await loadCalendly();
-      if (window.Calendly) {
-        window.Calendly.initPopupWidget({ url });
-      } else {
-        window.open(url, "_blank", "noopener,noreferrer");
+      const calendly = window.Calendly;
+      if (!calendly?.initPopupWidget) {
+        throw new Error("calendly-unavailable");
       }
+      calendly.initPopupWidget({ url });
     } catch {
-      window.open(url, "_blank", "noopener,noreferrer");
+      // Calendly could not load (offline, blocked, timed out) — send the
+      // visitor somewhere they can still book rather than doing nothing.
+      router.push(fallbackHref);
     } finally {
       setLoading(false);
     }
-  }, [url]);
+  }, [url, fallbackHref, router]);
 
   if (!url) {
     return (
