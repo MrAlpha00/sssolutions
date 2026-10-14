@@ -120,5 +120,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-export { MAX_RESUME_BYTES };
