@@ -90,3 +90,16 @@ export async function getJobs(): Promise<Job[]> {
   cacheTag(CACHE_TAGS.jobs);
   return db.listJobs({ publishedOnly: true });
 }
+
+/**
+ * Current year for the footer copyright notice.
+ *
+ * Wrapped in `use cache` so the non-deterministic `new Date()` call is given a
+ * cache lifetime (Cache Components requires this) and does not block
+ * prerendering. A one-hour lifetime keeps the year correct across new year.
+ */
+export async function getCurrentYear(): Promise<number> {
+  "use cache";
+  cacheLife("hours");
+  return new Date().getFullYear();
+}
