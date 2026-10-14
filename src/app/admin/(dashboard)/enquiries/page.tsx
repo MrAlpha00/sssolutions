@@ -11,7 +11,7 @@ import { EmptyState } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 
-const statuses = ["new", "in-progress", "closed"] as const;
+const statuses = ["new", "contacted", "resolved"] as const;
 
 export default async function AdminEnquiriesPage() {
   await connection();
@@ -106,9 +106,6 @@ export default async function AdminEnquiriesPage() {
                       Delete
                     </ConfirmSubmit>
                   </form>
-                  <StatusPill tone={enquiry.email_sent ? "positive" : "warning"}>
-                    {enquiry.email_sent ? "Email sent" : "Email not sent"}
-                  </StatusPill>
                 </div>
               </li>
             ))}
