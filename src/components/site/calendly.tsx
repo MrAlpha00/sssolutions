@@ -1,20 +1,27 @@
 "use client";
 
 import { useCallback, useState, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 
 import { ButtonLink, buttonClasses } from "@/components/ui/button";
 
 /**
  * Calendly popup CTA.
  *
- * The Calendly script and stylesheet are loaded only when the visitor clicks,
- * so nothing third-party is fetched on page load. When no Calendly URL is
- * configured (the client has not supplied one yet) the button links to the
- * contact page instead — we never invent a scheduling link.
+ * The official Calendly widget script and stylesheet are loaded only when the
+ * visitor clicks a booking button, so nothing third-party is fetched on page
+ * load and the popup opens on demand via `Calendly.initPopupWidget`. When no
+ * Calendly URL is configured, or the widget fails to load (offline, blocked by
+ * an extension), the button sends the visitor to the contact page instead — we
+ * never invent a scheduling link and never leave a dead button behind.
+ *
+ * Only `initPopupWidget` is used, so no floating Calendly badge is injected and
+ * the existing WhatsApp bubble stays the only floating widget.
  */
 
 const SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
 const CSS_HREF = "https://assets.calendly.com/assets/external/widget.css";
+const LOAD_TIMEOUT_MS = 10000;
 
 declare global {
   interface Window {
@@ -30,6 +37,23 @@ function loadCalendly(): Promise<void> {
   if (calendlyPromise) return calendlyPromise;
 
   calendlyPromise = new Promise<void>((resolve, reject) => {
+    let settled = false;
+    const fail = () => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      // Allow a later click to retry after a transient failure.
+      calendlyPromise = null;
+      reject(new Error("calendly-unavailable"));
+    };
+    const done = () => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      resolve();
+    };
+    const timer = window.setTimeout(fail, LOAD_TIMEOUT_MS);
+
     if (!document.querySelector(`link[href="${CSS_HREF}"]`)) {
       const link = document.createElement("link");
       link.rel = "stylesheet";
@@ -41,16 +65,20 @@ function loadCalendly(): Promise<void> {
       `script[src="${SCRIPT_SRC}"]`,
     );
     if (existing) {
-      existing.addEventListener("load", () => resolve());
-      existing.addEventListener("error", () => reject(new Error("calendly")));
+      if (window.Calendly) {
+        done();
+        return;
+      }
+      existing.addEventListener("load", done, { once: true });
+      existing.addEventListener("error", fail, { once: true });
       return;
     }
 
     const script = document.createElement("script");
     script.src = SCRIPT_SRC;
     script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("calendly"));
+    script.onload = done;
+    script.onerror = fail;
     document.head.appendChild(script);
   });
 

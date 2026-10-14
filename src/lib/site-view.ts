@@ -69,7 +69,11 @@ export function resolveSiteView(settings: SiteSettings): SiteView {
   const email = pick(settings.email, siteConfig.email);
   const whatsappNumber = pick(settings.whatsapp_number, siteConfig.whatsappNumber);
   const address = pick(settings.address, getFormattedAddress());
-  const calendlyUrl = pick(settings.calendly_url, siteConfig.calendlyUrl || env.calendlyUrl || "");
+  // Precedence: admin setting → NEXT_PUBLIC_CALENDLY_URL → site-config default.
+  const calendlyUrl = pick(
+    settings.calendly_url,
+    env.calendlyUrl || siteConfig.calendlyUrl || "",
+  );
 
   return {
     name: siteConfig.name,

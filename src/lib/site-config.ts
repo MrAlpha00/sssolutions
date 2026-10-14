@@ -40,8 +40,13 @@ export const siteConfig = {
   // Digits only, including country code. Used for WhatsApp deep links.
   whatsappNumber: "+91 98765 43210",
 
-  // Calendly scheduling URL. Empty until the client supplies their real link.
-  calendlyUrl: "" as string,
+  // Calendly scheduling URL used by every "Book a Consultation" CTA.
+  // The query string applies the brand colours: Sand #F0EDE4 background,
+  // Cyprus #004741 primary. Override via NEXT_PUBLIC_CALENDLY_URL or the admin
+  // dashboard (Website settings → Calendly); leave blank to send visitors to
+  // the contact page instead.
+  calendlyUrl:
+    "https://calendly.com/vercelsupa/30min?background_color=f0ede4&primary_color=004741" as string,
 
   managingDirector: "Shamasundar K N",
 
