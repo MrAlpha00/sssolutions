@@ -21,6 +21,17 @@ type PageMetaOptions = {
   noIndex?: boolean;
 };
 
+/**
+ * The generated Open Graph image (`src/app/opengraph-image.tsx`). It is declared
+ * explicitly so every page emits a share image, resolved against `metadataBase`.
+ */
+const ogImage = {
+  url: "/opengraph-image",
+  width: 1200,
+  height: 630,
+  alt: `${siteConfig.name} — ${siteConfig.tagline}`,
+} as const;
+
 export function createMetadata({
   title,
   description,
@@ -42,12 +53,14 @@ export function createMetadata({
       description,
       siteName: siteConfig.name,
       locale: "en_IN",
+      images: [ogImage],
       ...(publishedTime ? { publishedTime } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [ogImage.url],
     },
   };
 }
@@ -69,8 +82,12 @@ export const rootMetadata: Metadata = {
     title: `${siteConfig.name} | ${siteConfig.tagline}`,
     description: siteConfig.description,
     locale: "en_IN",
+    images: [ogImage],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: {
+    card: "summary_large_image",
+    images: [ogImage.url],
+  },
   icons: { icon: "/favicon.ico" },
 };
 
