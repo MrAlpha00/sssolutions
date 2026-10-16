@@ -68,6 +68,31 @@ export const siteConfig = {
   },
 } as const;
 
+/**
+ * "How we work" process steps. Proposed starter copy — keep it editable here
+ * (and later in the dashboard) rather than hardcoding it in components.
+ */
+export const howWeWorkSteps = [
+  {
+    step: "01",
+    title: "Understand the need",
+    description:
+      "We start with a conversation about your business, your team, and the specific people challenge you are facing — before suggesting anything.",
+  },
+  {
+    step: "02",
+    title: "Plan a practical approach",
+    description:
+      "We agree a clear, right-sized plan: what we will do, what you will do, what it covers, and what it does not.",
+  },
+  {
+    step: "03",
+    title: "Support and improve",
+    description:
+      "We help put the plan into practice, stay available as questions come up, and review what is working so it can be adjusted.",
+  },
+] as const;
+
 export function getFormattedAddress(): string {
   const a = siteConfig.address;
   return `${a.line1}, ${a.line2}, ${a.city}, ${a.state} – ${a.postalCode}, ${a.country}`;
