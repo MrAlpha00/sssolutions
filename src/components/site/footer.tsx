@@ -133,11 +133,11 @@ export function SiteFooter({
 
       {/* Bottom bar */}
       <div className="border-t border-sand/15">
-        <Container className="flex flex-col items-center justify-between gap-3 py-6 text-xs text-sand/60 sm:flex-row">
+        <Container className="flex flex-col items-center justify-between gap-3 pb-24 pt-6 text-xs text-sand/60 sm:flex-row sm:pb-6">
           <p>
             © {year} {view.name}. All rights reserved.
           </p>
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <Link href="/privacy" className="transition-colors hover:text-sand">
               Privacy Policy
             </Link>

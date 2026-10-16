@@ -5,7 +5,6 @@ import { Section } from "@/components/ui/container";
 import { Eyebrow } from "@/components/ui/section-heading";
 import { ContactForm } from "@/components/site/contact-form";
 import { LocationModal } from "@/components/site/location-modal";
-import { NewsletterForm } from "@/components/site/newsletter-form";
 import { PageHero } from "@/components/site/page-hero";
 import { SocialLinks } from "@/components/site/social-links";
 import { getServices, getSettings } from "@/lib/content";
