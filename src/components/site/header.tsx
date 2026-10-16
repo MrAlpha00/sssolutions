@@ -50,6 +50,16 @@ export function SiteHeader({
     };
   }, [open]);
 
+  // Close the menu with Escape for keyboard users.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   const isActive = (href: string) => {
     if (href.includes("#")) return false;
     if (href === "/") return pathname === "/";
@@ -65,48 +75,38 @@ export function SiteHeader({
           : "border-transparent bg-sand",
       )}
     >
-      {/* Top bar */}
-      <div className="hidden border-b border-line/70 bg-cyprus text-sand lg:block">
-        <div className="container-x flex items-center justify-between gap-6 py-2 text-xs">
-          <div className="flex items-center gap-5">
+      {/* Top information bar — compact */}
+      <div className="hidden border-b border-sand/10 bg-cyprus text-sand lg:block">
+        <div className="container-x flex h-9 items-center justify-between gap-4 text-[0.72rem] leading-none">
+          <div className="flex items-center gap-4">
             <a
               href={view.phoneHref}
-              className="flex items-center gap-2 text-sand/85 transition-colors hover:text-sand"
+              className="flex items-center gap-1.5 text-sand/85 transition-colors hover:text-sand"
             >
-              <Phone className="h-3.5 w-3.5" />
-              {view.phone}
+              <Phone className="h-3 w-3" aria-hidden />
+              <span className="tracking-wide">{view.phone}</span>
             </a>
+            <span aria-hidden className="h-3 w-px bg-sand/25" />
             <a
               href={view.emailHref}
-              className="flex items-center gap-2 text-sand/85 transition-colors hover:text-sand"
+              className="text-sand/85 transition-colors hover:text-sand"
             >
-              <span aria-hidden className="text-sand/40">
-                •
-              </span>
               {view.email}
             </a>
-            {view.businessHours ? (
-              <span className="flex items-center gap-2 text-sand/70">
-                <span aria-hidden className="text-sand/40">
-                  •
-                </span>
-                {view.businessHours}
-              </span>
-            ) : null}
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sand/70">{view.tagline}</span>
+            <span className="text-sand/65">{view.tagline}</span>
             <SocialLinks
               social={view.social}
               tone="light"
-              itemClassName="h-7 w-7 border-sand/25 text-sand/85"
+              itemClassName="h-6 w-6 border-sand/25 text-sand/85"
             />
           </div>
         </div>
       </div>
 
-      {/* Main bar */}
-      <div className="container-x flex items-center justify-between gap-4 py-3.5">
+      {/* Main navigation */}
+      <div className="container-x flex h-[68px] items-center justify-between gap-3 lg:h-[76px]">
         <Link
           href="/"
           aria-label={`${view.name} — home`}
@@ -115,15 +115,15 @@ export function SiteHeader({
           <BrandLogo />
         </Link>
 
-        <nav aria-label="Primary" className="hidden xl:block">
-          <ul className="flex items-center gap-1">
+        <nav aria-label="Primary" className="hidden min-w-0 xl:block">
+          <ul className="flex items-center gap-0.5 whitespace-nowrap">
             {nav.map((item) => (
               <li key={item.label}>
                 <Link
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
+                    "rounded-full px-3 py-2 text-[0.82rem] font-medium transition-colors",
                     isActive(item.href)
                       ? "bg-cyprus/8 text-cyprus"
                       : "text-ink/80 hover:bg-cyprus/5 hover:text-cyprus",
@@ -136,53 +136,62 @@ export function SiteHeader({
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-3 xl:flex">
+        <div className="hidden shrink-0 items-center gap-2.5 xl:flex">
           <a
             href={view.phoneHref}
-            className="flex items-center gap-2 text-sm font-medium text-cyprus"
+            aria-label={`Call ${view.phone}`}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-cyprus transition-colors hover:border-cyprus hover:bg-cyprus/5"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line">
-              <Phone className="h-4 w-4" />
-            </span>
-            <span className="hidden 2xl:inline">{view.phone}</span>
+            <Phone className="h-4 w-4" />
           </a>
           <BookButton url={view.calendlyUrl} size="md">
             Book a Consultation
           </BookButton>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen((value) => !value)}
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
-          aria-label={open ? "Close menu" : "Open menu"}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-cyprus xl:hidden"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex shrink-0 items-center gap-2 xl:hidden">
+          {/* Keep booking reachable on mid-size screens without crowding. */}
+          <BookButton
+            url={view.calendlyUrl}
+            size="sm"
+            className="hidden sm:inline-flex"
+          >
+            Book a Consultation
+          </BookButton>
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            aria-label={open ? "Close menu" : "Open menu"}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-cyprus transition-colors hover:bg-cyprus/5"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
       {open ? (
         <div
           id="mobile-navigation"
-          className="fixed inset-x-0 top-[calc(100%)] bottom-0 z-40 overflow-y-auto border-t border-line bg-sand xl:hidden"
+          className="fixed inset-x-0 top-full bottom-0 z-40 overflow-y-auto border-t border-line bg-sand xl:hidden"
         >
           <motion.div
             initial={reduce ? undefined : { opacity: 0, y: -8 }}
             animate={reduce ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="container-x py-6"
+            className="container-x py-5"
           >
             <nav aria-label="Mobile">
-              <ul className="flex flex-col gap-1">
+              <ul className="flex flex-col gap-0.5">
                 {nav.map((item) => (
                   <li key={item.label}>
                     <Link
                       href={item.href}
+                      aria-current={isActive(item.href) ? "page" : undefined}
                       className={cn(
-                        "block rounded-xl px-4 py-3 text-base font-medium transition-colors",
+                        "block rounded-xl px-4 py-3 text-[0.95rem] font-medium transition-colors",
                         isActive(item.href)
                           ? "bg-cyprus/8 text-cyprus"
                           : "text-ink hover:bg-cyprus/5",
@@ -195,7 +204,7 @@ export function SiteHeader({
               </ul>
             </nav>
 
-            <div className="mt-6 space-y-3 border-t border-line pt-6">
+            <div className="mt-5 space-y-3 border-t border-line pt-5">
               <BookButton
                 url={view.calendlyUrl}
                 size="lg"
@@ -212,20 +221,23 @@ export function SiteHeader({
               </a>
             </div>
 
-            <div className="mt-6 space-y-3 text-sm text-muted">
+            <div className="mt-5 space-y-3 text-sm text-muted">
               <p className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-leaf-dark" />
                 {view.address}
               </p>
               <p className="flex items-center gap-2">
                 <span className="sr-only">Email</span>
-                <a href={view.emailHref} className="text-cyprus underline underline-offset-2">
+                <a
+                  href={view.emailHref}
+                  className="text-cyprus underline underline-offset-2"
+                >
                   {view.email}
                 </a>
               </p>
             </div>
 
-            <SocialLinks social={view.social} className="mt-6" />
+            <SocialLinks social={view.social} className="mt-5" />
           </motion.div>
         </div>
       ) : null}
