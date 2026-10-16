@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="1200" height="860" fill="none" role="img" aria-labelledby="heroTeamPlaceholderTitle">
+  <title id="heroTeamPlaceholderTitle">Placeholder illustration of four professionals</title>
+  <!--
+    Lightweight, transparent placeholder — NOT a photograph and not an official
+    company asset. Replace it with the final transparent PNG (see HERO_IMAGE_SRC
+    in src/app/(site)/page.tsx).
+  -->
+  <defs>
+    <g id="hero-person">
+      <circle cx="0" cy="0" r="62" />
+      <path d="M-96 286c0-92 43-150 96-150s96 58 96 150v258h-192z" />
+    </g>
+  </defs>
+  <g fill="#004741">
+    <use href="#hero-person" transform="translate(175 256)" opacity="0.18" />
+    <use href="#hero-person" transform="translate(740 245) scale(1.02)" opacity="0.18" />
+  </g>
+  <g fill="#6fa37a">
+    <use href="#hero-person" transform="translate(455 213) scale(1.08)" opacity="0.3" />
+    <use href="#hero-person" transform="translate(1020 278) scale(0.96)" opacity="0.3" />
+  </g>
+</svg>

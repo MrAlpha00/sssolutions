@@ -51,6 +51,16 @@ export const metadata = createMetadata({
   path: "/",
 });
 
+/**
+ * Hero image source — the single place to change when the artwork is ready.
+ *
+ * The live site currently uses a lightweight transparent SVG placeholder.
+ * To use the final artwork, drop a transparent PNG at
+ * `public/images/hero-hr-team.png` and change this constant to
+ * `"/images/hero-hr-team.png"`.
+ */
+const HERO_IMAGE_SRC = "/images/hero-team-placeholder.svg";
+
 const reasons = [
   {
     icon: Target,
@@ -160,26 +170,30 @@ export default async function HomePage() {
             ) : null}
           </div>
 
-          {/* HR / team photograph, blended into the sand background. */}
-          <Reveal variants={scaleIn} className="relative lg:justify-self-end">
+          {/* Hero image — a transparent cutout of four HR professionals. The
+              decorative green shapes sit behind it and the cutout simply
+              overlaps them, so there is no card, frame, or boxed background.
+
+              To use the final artwork, drop a transparent PNG at
+              `public/images/hero-hr-team.png` and change HERO_IMAGE_SRC above. */}
+          <Reveal variants={scaleIn} className="relative w-full lg:justify-self-end">
             <span
               aria-hidden
-              className="absolute -left-5 -top-5 h-24 w-24 rounded-full bg-leaf/30"
+              className="brand-blob absolute -right-4 -top-6 h-40 w-40 bg-leaf/20 sm:h-56 sm:w-56"
             />
             <span
               aria-hidden
-              className="hero-arch absolute -bottom-4 -right-4 -z-10 h-full w-full bg-cyprus/10"
+              className="hero-arch absolute bottom-4 left-1/2 h-2/3 w-3/4 -translate-x-1/2 bg-cyprus/8"
             />
-            <div className="hero-arch relative aspect-[4/5] w-full max-w-md overflow-hidden shadow-card sm:aspect-[5/5] lg:max-w-lg">
-              <Image
-                src="/images/hero-team.jpg"
-                alt="A diverse professional team collaborating around a table in a bright modern office"
-                fill
-                sizes="(min-width: 1024px) 42vw, (min-width: 640px) 90vw, 100vw"
-                className="object-cover"
-                preload
-              />
-            </div>
+            <Image
+              src={HERO_IMAGE_SRC}
+              alt="Four HR professionals in corporate attire, ready to support your team"
+              width={1200}
+              height={860}
+              sizes="(min-width: 1024px) 42vw, (min-width: 640px) 70vw, 88vw"
+              className="relative z-10 mx-auto h-auto w-full max-w-sm object-contain sm:max-w-md lg:max-w-lg"
+              preload
+            />
           </Reveal>
         </div>
       </section>

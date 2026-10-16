@@ -212,17 +212,28 @@ written from the project brief and should be reviewed by the client.
 
 ### Photography used on the homepage
 
-Locally stored, optimised via `next/image`. Both were downloaded from
-**Unsplash** (Unsplash License — free for commercial use, no attribution
-required):
+The hero uses a transparent cutout. Until the final artwork is supplied it
+renders a lightweight transparent SVG placeholder of four human silhouettes
+(`public/images/hero-team-placeholder.svg`) — it is deliberately not a
+photograph and not an official company asset.
 
-| File | Original (images.unsplash.com) | Photographer |
-| --- | --- | --- |
-| `public/images/hero-team.jpg` | `photo-1522071820081-009f0129c71c` | Brooke Cagle |
-| `public/images/about-collaboration.jpg` | `photo-1600880292203-757bb62b4baf` | — |
+To use the final image:
 
-Replace either with client-approved photography when available — they are only
-referenced from `src/app/(site)/page.tsx`.
+1. Save a **transparent PNG** at `public/images/hero-hr-team.png`.
+2. In `src/app/(site)/page.tsx`, change the single constant `HERO_IMAGE_SRC`
+   from `"/images/hero-team-placeholder.svg"` to `"/images/hero-hr-team.png"`.
+
+The hero layout uses `object-fit: contain`, so the cutout keeps its aspect
+ratio with no cropping, no card, and no visible frame.
+
+The other homepage photograph (`public/images/about-collaboration.jpg`) was
+downloaded from **Unsplash** (Unsplash License — free for commercial use, no
+attribution required): `photo-1600880292203-757bb62b4baf`. Replace it with
+client-approved photography when available — it is referenced from
+`src/app/(site)/page.tsx`.
+
+> `public/images/hero-team.jpg` is no longer referenced now that the hero uses a
+> transparent cutout; it can be deleted once the final art is in place.
 
 ## Deployment
 
