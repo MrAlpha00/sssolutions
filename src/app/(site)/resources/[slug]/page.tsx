@@ -15,8 +15,16 @@ import { formatDate } from "@/lib/utils";
 
 type Params = { params: Promise<{ slug: string }> };
 
+// Cache Components requires generateStaticParams to return at least one
+// result. When no posts exist, this reserved slug keeps the build passing;
+// the page itself calls notFound() for it since no post matches.
+const BUILD_PLACEHOLDER_SLUG = "__build_placeholder__";
+
 export async function generateStaticParams() {
   const posts = await getPosts();
+  if (posts.length === 0) {
+    return [{ slug: BUILD_PLACEHOLDER_SLUG }];
+  }
   return posts.map((post) => ({ slug: post.slug }));
 }
 

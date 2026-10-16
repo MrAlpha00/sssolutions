@@ -21,8 +21,16 @@ import { resolveSiteView } from "@/lib/site-view";
 
 type Params = { params: Promise<{ slug: string }> };
 
+// Cache Components requires generateStaticParams to return at least one
+// result. When no services exist, this reserved slug keeps the build passing;
+// the page itself calls notFound() for it since no service matches.
+const BUILD_PLACEHOLDER_SLUG = "__build_placeholder__";
+
 export async function generateStaticParams() {
   const services = await getServices();
+  if (services.length === 0) {
+    return [{ slug: BUILD_PLACEHOLDER_SLUG }];
+  }
   return services.map((service) => ({ slug: service.slug }));
 }
 
