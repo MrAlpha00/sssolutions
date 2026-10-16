@@ -203,17 +203,36 @@ written from the project brief and should be reviewed by the client.
 ## Assets to supply
 
 - **Logo:** replace the placeholder `<Mark />` in `src/components/ui/logo.tsx` with
-  the real asset (e.g. `public/brand/logo.svg`).
+  the real asset (e.g. `public/brand/logo.svg`). The current mark is a restrained
+  SS monogram placeholder — the official logo has not been supplied yet.
 - **Photography:** service/resource images are optional (`image_url` /
   `cover_image_url` fields). Cards are designed to work without images.
 - **Open Graph image:** currently generated at build time; swap for a designed
   `public/og-image.png` if preferred.
 
+### Photography used on the homepage
+
+Locally stored, optimised via `next/image`. Both were downloaded from
+**Unsplash** (Unsplash License — free for commercial use, no attribution
+required):
+
+| File | Original (images.unsplash.com) | Photographer |
+| --- | --- | --- |
+| `public/images/hero-team.jpg` | `photo-1522071820081-009f0129c71c` | Brooke Cagle |
+| `public/images/about-collaboration.jpg` | `photo-1600880292203-757bb62b4baf` | — |
+
+Replace either with client-approved photography when available — they are only
+referenced from `src/app/(site)/page.tsx`.
+
 ## Deployment
 
 1. Set `NEXT_PUBLIC_SITE_URL` to the production domain.
 2. Configure the variables above in your host (e.g. Vercel project settings).
-3. Run `npm run build` (or let the host build it).
+3. **If Supabase is configured**, run `supabase/migrations/0002_seed_initial_content.sql`
+   once in the project's SQL Editor. It idempotently seeds services, partners,
+   FAQs, articles, and default settings — `src/lib/seed.ts` only feeds the
+   *local* JSON store, so without this step the production site is empty.
+4. Run `npm run build` (or let the host build it).
 
 **Filesystem note:** the local store and resume uploads are written to `.data/`,
 which is ephemeral on serverless hosts. For production, use **Supabase** (the
