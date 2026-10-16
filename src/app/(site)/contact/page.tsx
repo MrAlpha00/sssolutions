@@ -142,17 +142,6 @@ export default async function ContactPage() {
         </div>
       </Section>
 
-      <Section tone="cream" className="py-14 sm:py-16">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl">Stay in the loop</h2>
-          <p className="mt-2 text-sm text-muted">
-            Occasional HR insights by email. Unsubscribe whenever you like.
-          </p>
-          <div className="mt-6 text-left">
-            <NewsletterForm turnstileSiteKey={turnstileSiteKey} compact />
-          </div>
-        </div>
-      </Section>
     </>
   );
 }
