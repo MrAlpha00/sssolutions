@@ -34,7 +34,14 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
-      <body className="flex min-h-dvh flex-col bg-sand font-sans text-ink antialiased">
+      {/*
+        `overflow-x-clip` keeps the page from scrolling sideways. Scroll-reveal
+        animations start offset by 28px, so elements that have not yet been
+        scrolled into view would otherwise widen the document. `clip` is used
+        rather than `hidden` because it does not create a scroll container, so
+        the sticky header keeps working.
+      */}
+      <body className="flex min-h-dvh flex-col overflow-x-clip bg-sand font-sans text-ink antialiased">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-cyprus focus:px-5 focus:py-2.5 focus:text-sm focus:font-medium focus:text-sand"

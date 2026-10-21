@@ -109,7 +109,7 @@ export function SiteHeader({
         )}
       >
         <div className="container-x flex h-[68px] items-center justify-between gap-3 lg:h-[76px]">
-          <BrandLogo href="/" priority className="shrink-0" />
+          <BrandLogo href="/" preload className="shrink-0" />
 
           <nav aria-label="Primary" className="hidden min-w-0 xl:block">
             <ul className="flex items-center gap-0.5 whitespace-nowrap">
@@ -146,14 +146,16 @@ export function SiteHeader({
           </div>
 
           <div className="flex shrink-0 items-center gap-2 xl:hidden">
-            {/* Keep booking reachable on mid-size screens without crowding. */}
-            <BookButton
-              url={view.calendlyUrl}
-              size="sm"
-              className="hidden sm:inline-flex"
-            >
-              Book a Consultation
-            </BookButton>
+            {/* Keep booking reachable on mid-size screens without crowding.
+                The button is wrapped rather than given a `hidden` class of its
+                own: Tailwind emits `.inline-flex` after `.hidden`, so a
+                `hidden` class on the button itself would lose the cascade and
+                the button would still show on narrow phones. */}
+            <div className="hidden sm:block">
+              <BookButton url={view.calendlyUrl} size="sm">
+                Book a Consultation
+              </BookButton>
+            </div>
             <button
               type="button"
               onClick={() => setOpen((value) => !value)}

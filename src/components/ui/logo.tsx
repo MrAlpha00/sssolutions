@@ -33,7 +33,7 @@ export function BrandLogo({
   className,
   compact = false,
   href,
-  priority = false,
+  preload = false,
 }: {
   tone?: "dark" | "light";
   className?: string;
@@ -41,7 +41,8 @@ export function BrandLogo({
   compact?: boolean;
   /** When set the logo becomes a link to this address. */
   href?: string;
-  priority?: boolean;
+  /** Load the logo eagerly (above-the-fold placements such as the header). */
+  preload?: boolean;
 }) {
   const content = compact ? (
     <Image
@@ -51,7 +52,7 @@ export function BrandLogo({
       height={MARK.height}
       sizes="48px"
       className="h-10 w-10 object-contain"
-      priority={priority}
+      preload={preload}
     />
   ) : (
     <Image
@@ -59,9 +60,9 @@ export function BrandLogo({
       alt="Supportive HR Solutions"
       width={LOCKUP.width}
       height={LOCKUP.height}
-      sizes="(min-width: 1024px) 172px, 140px"
+      sizes="(min-width: 640px) 141px, 127px"
       className="h-9 w-auto object-contain sm:h-10"
-      priority={priority}
+      preload={preload}
     />
   );
 
