@@ -48,7 +48,7 @@ export function SiteFooter({
       {/* Main columns */}
       <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
         <div>
-          <BrandLogo tone="light" />
+          <BrandLogo tone="light" href="/" />
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-sand/75">
             {view.description}
           </p>
@@ -78,7 +78,22 @@ export function SiteFooter({
             Services
           </h2>
           <ul className="mt-5 space-y-3 text-sm">
-            {footerServiceLinks.map((link) => (
+            {footerServiceLinks.hr.map((link) => (
+              <li key={link.label}>
+                <Link
+                  href={link.href}
+                  className="text-sand/75 transition-colors hover:text-sand"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <h3 className="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-sand/60">
+            Business services
+          </h3>
+          <ul className="mt-3 space-y-3 text-sm">
+            {footerServiceLinks.business.map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.href}

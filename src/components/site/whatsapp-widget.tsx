@@ -23,7 +23,7 @@ export function WhatsAppWidget({
   const reduce = useReducedMotion();
 
   return (
-    <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
+    <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
       <AnimatePresence>
         {open ? (
           <motion.div
@@ -33,7 +33,7 @@ export function WhatsAppWidget({
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
             role="dialog"
             aria-label="Chat on WhatsApp"
-            className="w-[17rem] overflow-hidden rounded-2xl border border-line bg-cream shadow-2xl"
+            className="w-[min(17rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-line bg-cream shadow-2xl"
           >
             <div className="flex items-start justify-between gap-3 bg-cyprus px-4 py-3 text-sand">
               <div>
@@ -70,9 +70,9 @@ export function WhatsAppWidget({
         onClick={() => setOpen((value) => !value)}
         aria-label={open ? "Close WhatsApp" : "Chat with us on WhatsApp"}
         aria-expanded={open}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-leaf text-white shadow-[0_16px_40px_-12px_rgba(78,138,92,0.8)] transition-transform hover:-translate-y-0.5 hover:bg-leaf-dark"
+        className="flex h-12 w-12 items-center justify-center rounded-full bg-leaf text-white shadow-[0_16px_40px_-12px_rgba(78,138,92,0.8)] transition-transform hover:-translate-y-0.5 hover:bg-leaf-dark sm:h-14 sm:w-14"
       >
-        <WhatsAppIcon className="h-7 w-7" />
+        <WhatsAppIcon className="h-6 w-6 sm:h-7 sm:w-7" />
       </button>
     </div>
   );

@@ -39,13 +39,18 @@ export function CallToActionBand({
                     "Tell us what you are working on and we will suggest a practical next step. No obligation, no hard sell."}
                 </p>
               </div>
-              <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
-                <BookButton url={view.calendlyUrl} variant="light" size="lg">
+              <div className="flex flex-col gap-3 sm:shrink-0 sm:flex-row">
+                <BookButton
+                  url={view.calendlyUrl}
+                  variant="light"
+                  size="lg"
+                  className="w-full px-6 py-3 text-[0.95rem] sm:w-auto sm:px-7 sm:py-3.5 sm:text-base"
+                >
                   Book a Consultation
                 </BookButton>
                 <a
                   href={view.emailHref}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-sand/40 px-7 py-3.5 text-base font-medium text-sand transition-colors hover:bg-sand hover:text-cyprus"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sand/40 px-6 py-3 text-[0.95rem] font-medium text-sand transition-colors hover:bg-sand hover:text-cyprus sm:w-auto sm:px-7 sm:py-3.5 sm:text-base"
                 >
                   Send an enquiry
                 </a>

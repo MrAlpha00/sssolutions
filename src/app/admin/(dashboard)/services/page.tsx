@@ -11,17 +11,20 @@ import { AdminForm, type AdminField } from "@/components/admin/admin-form";
 import { ConfirmSubmit } from "@/components/admin/confirm-submit";
 import { AdminPageHeader, AdminPanel, StatusPill } from "@/components/admin/ui";
 import { buttonClasses } from "@/components/ui/button";
-import { ServiceIcon } from "@/components/ui/service-icon";
+import { ServiceIcon, serviceIconKeys } from "@/components/ui/service-icon";
 import { db } from "@/lib/db";
+import {
+  serviceGroupLabels,
+  serviceGroupShortLabels,
+} from "@/lib/service-groups";
+import { DEFAULT_SERVICE_GROUP, SERVICE_GROUPS } from "@/lib/types";
 
-const iconOptions = [
-  "users",
-  "wallet",
-  "shield-check",
-  "target",
-  "heart-handshake",
-  "graduation-cap",
-].map((value) => ({ value, label: value }));
+const iconOptions = serviceIconKeys.map((value) => ({ value, label: value }));
+
+const groupOptions = SERVICE_GROUPS.map((group) => ({
+  value: group,
+  label: serviceGroupLabels[group],
+}));
 
 export default async function AdminServicesPage({
   searchParams,
@@ -42,6 +45,14 @@ export default async function AdminServicesPage({
       label: "Slug",
       hint: "Leave blank to generate one from the title",
       defaultValue: editing?.slug,
+    },
+    {
+      name: "group",
+      label: "Service group",
+      type: "select",
+      options: groupOptions,
+      hint: "Where this service appears on the public services page.",
+      defaultValue: editing?.group ?? DEFAULT_SERVICE_GROUP,
     },
     {
       name: "icon",
@@ -126,7 +137,8 @@ export default async function AdminServicesPage({
                   <div className="min-w-0">
                     <p className="truncate font-medium text-cyprus">{service.title}</p>
                     <p className="truncate text-xs text-muted">
-                      /{service.slug} · order {service.order_index}
+                      /{service.slug} · {serviceGroupShortLabels[service.group]} ·
+                      order {service.order_index}
                     </p>
                   </div>
                 </div>

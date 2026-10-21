@@ -2,6 +2,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import { env, isSupabaseAdminConfigured, isSupabaseConfigured } from "@/lib/env";
 import { defaultSettings } from "@/lib/seed";
+import { normalizeServiceGroup } from "@/lib/service-groups";
 import type {
   ContactSubmission,
   Faq,
@@ -160,6 +161,30 @@ async function orderedListSimple<T>(
   return (data ?? []) as T[];
 }
 
+/**
+ * A service row as stored in PostgreSQL.
+ *
+ * `group` is a reserved word in SQL, so the column is called `service_group`
+ * and mapped to the `group` field of the `Service` type here.
+ */
+type ServiceRow = Omit<Service, "group"> & { service_group?: string | null };
+
+function toService(row: ServiceRow): Service {
+  const { service_group, ...rest } = row;
+  return { ...rest, group: normalizeServiceGroup(service_group) };
+}
+
+/** Map the app-level `group` field onto the `service_group` column. */
+function toServiceColumns(input: Partial<Service>): Record<string, unknown> {
+  const { group, ...rest } = input;
+  return {
+    ...rest,
+    ...(group === undefined
+      ? {}
+      : { service_group: normalizeServiceGroup(group) }),
+  };
+}
+
 export const supabaseStore: DataStore = {
   kind: "supabase",
 
@@ -194,12 +219,24 @@ export const supabaseStore: DataStore = {
     return next;
   },
 
-  listServices: (o) => listRows<Service>("services", o),
-  getServiceBySlug: (slug, o) => findBySlug<Service>("services", slug, o),
-  getServiceById: (id) => findById<Service>("services", id),
-  createService: (input: New<Service>) => insertRow<Service>("services", input),
-  updateService: (id, input: Edit<Service>) =>
-    updateRow<Service>("services", id, input),
+  listServices: async (o) =>
+    (await listRows<ServiceRow>("services", o)).map(toService),
+  getServiceBySlug: async (slug, o) => {
+    const row = await findBySlug<ServiceRow>("services", slug, o);
+    return row ? toService(row) : null;
+  },
+  getServiceById: async (id) => {
+    const row = await findById<ServiceRow>("services", id);
+    return row ? toService(row) : null;
+  },
+  createService: async (input: New<Service>) =>
+    toService(
+      await insertRow<ServiceRow>("services", toServiceColumns(input)),
+    ),
+  updateService: async (id, input: Edit<Service>) =>
+    toService(
+      await updateRow<ServiceRow>("services", id, toServiceColumns(input)),
+    ),
   deleteService: (id) => deleteRow("services", id),
 
   listPartners: (o) => listRows<Partner>("partners", o),

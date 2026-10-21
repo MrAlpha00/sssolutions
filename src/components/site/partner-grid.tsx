@@ -125,7 +125,7 @@ export function PartnerGrid({ partners }: { partners: Partner[] }) {
   return (
     <div
       className={cn(
-        "relative -mx-6 overflow-hidden py-5 sm:-mx-8 lg:-mx-10",
+        "relative -mx-5 overflow-hidden py-5 sm:-mx-6 lg:-mx-8",
         // Soft edge fades so the tracks blend into the section background.
         "before:absolute before:inset-y-0 before:left-0 before:z-10 before:w-16 before:bg-gradient-to-r before:from-cream before:to-transparent sm:before:w-24",
         "after:absolute after:inset-y-0 after:right-0 after:z-10 after:w-16 after:bg-gradient-to-l after:from-cream after:to-transparent sm:after:w-24",

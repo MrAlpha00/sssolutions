@@ -42,6 +42,7 @@ import {
 } from "@/lib/content";
 import { env } from "@/lib/env";
 import { createMetadata } from "@/lib/seo";
+import { groupServices, serviceSections } from "@/lib/service-groups";
 import { howWeWorkSteps, siteConfig } from "@/lib/site-config";
 import { resolveSiteView } from "@/lib/site-view";
 
@@ -52,14 +53,16 @@ export const metadata = createMetadata({
 });
 
 /**
- * Hero image source — the single place to change when the artwork is ready.
+ * Hero image source — the single place to change when new artwork is ready.
  *
- * The live site currently uses a lightweight transparent SVG placeholder.
- * To use the final artwork, drop a transparent PNG at
- * `public/images/hero-hr-team.png` and change this constant to
- * `"/images/hero-hr-team.png"`.
+ * The image is a transparent PNG cutout of the four-person HR team, so it sits
+ * directly on the page background with no card, frame, or boxed background.
+ * To use different artwork, drop a transparent PNG into `public/images/` and
+ * update this constant (and the intrinsic width/height below).
  */
-const HERO_IMAGE_SRC = "/images/hero-team-placeholder.svg";
+const HERO_IMAGE_SRC = "/images/team.png";
+const HERO_IMAGE_WIDTH = 1515;
+const HERO_IMAGE_HEIGHT = 1067;
 
 const reasons = [
   {
@@ -107,7 +110,7 @@ export default async function HomePage() {
     ]);
 
   const view = resolveSiteView(settings);
-  const highlightedServices = services.slice(0, 6);
+  const { hr: hrServices, business: businessServices } = groupServices(services);
   const latestPosts = posts.slice(0, 3);
   const turnstileSiteKey = env.turnstileSiteKey ?? "";
 
@@ -126,7 +129,9 @@ export default async function HomePage() {
         />
 
         <div className="container-x relative grid items-center gap-12 py-14 lg:grid-cols-[55fr_45fr] lg:gap-16 lg:py-20">
-          <div>
+          {/* On small screens the cutout comes first so the visitor sees the
+              team immediately; from `lg` up the copy returns to the left. */}
+          <div className="order-2 lg:order-1">
             <Reveal>
               <Eyebrow>{view.hero.label}</Eyebrow>
             </Reveal>
@@ -173,10 +178,12 @@ export default async function HomePage() {
           {/* Hero image — a transparent cutout of four HR professionals. The
               decorative green shapes sit behind it and the cutout simply
               overlaps them, so there is no card, frame, or boxed background.
-
-              To use the final artwork, drop a transparent PNG at
-              `public/images/hero-hr-team.png` and change HERO_IMAGE_SRC above. */}
-          <Reveal variants={scaleIn} className="relative w-full lg:justify-self-end">
+              The image is never stretched: it is width-constrained and
+              scaled with `object-contain` so the aspect ratio is preserved. */}
+          <Reveal
+            variants={scaleIn}
+            className="relative order-1 w-full lg:order-2 lg:justify-self-end"
+          >
             <span
               aria-hidden
               className="brand-blob absolute -right-4 -top-6 h-40 w-40 bg-leaf/20 sm:h-56 sm:w-56"
@@ -188,10 +195,11 @@ export default async function HomePage() {
             <Image
               src={HERO_IMAGE_SRC}
               alt="Four HR professionals in corporate attire, ready to support your team"
-              width={1200}
-              height={860}
-              sizes="(min-width: 1024px) 42vw, (min-width: 640px) 70vw, 88vw"
-              className="relative z-10 mx-auto h-auto w-full max-w-sm object-contain sm:max-w-md lg:max-w-lg"
+              width={HERO_IMAGE_WIDTH}
+              height={HERO_IMAGE_HEIGHT}
+              quality={90}
+              sizes="(min-width: 1024px) 44vw, (min-width: 640px) 80vw, 92vw"
+              className="relative z-10 mx-auto h-auto w-full max-w-[23rem] object-contain sm:max-w-[30rem] lg:max-w-[34rem]"
               preload
             />
           </Reveal>
@@ -234,7 +242,7 @@ export default async function HomePage() {
                   className="object-cover"
                 />
               </div>
-              <Card className="absolute -bottom-6 -right-2 max-w-[16rem] border-cyprus/15 bg-cyprus p-5 text-sand shadow-card sm:right-6">
+              <Card className="absolute -bottom-6 -right-1 max-w-[15rem] border-cyprus/15 bg-cyprus p-4 text-sand shadow-card sm:right-6 sm:max-w-[16rem] sm:p-5">
                 <Quote className="h-6 w-6 text-leaf" aria-hidden />
                 <p className="mt-3 text-sm leading-relaxed">
                   Our work is about people. When HR is done well, employees
@@ -302,12 +310,39 @@ export default async function HomePage() {
           </Reveal>
         </div>
         <StaggerGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {highlightedServices.map((service) => (
+          {hrServices.map((service) => (
             <StaggerItem key={service.id} className="h-full">
               <ServiceCard service={service} />
             </StaggerItem>
           ))}
         </StaggerGroup>
+
+        {/* The additional business services are shown as their own, clearly
+            different band rather than as another row of identical cards. */}
+        {businessServices.length > 0 ? (
+          <div className="mt-16 rounded-3xl border border-line bg-sand p-6 sm:p-10">
+            <Reveal>
+              <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+                <SectionHeading
+                  eyebrow="Also available"
+                  title={serviceSections[1].title}
+                  description={serviceSections[1].description}
+                />
+                <ButtonLink href="/services" variant="secondary">
+                  See all services
+                  <ArrowRight className="h-4 w-4" />
+                </ButtonLink>
+              </div>
+            </Reveal>
+            <StaggerGroup className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {businessServices.map((service) => (
+                <StaggerItem key={service.id} className="h-full">
+                  <ServiceCard service={service} />
+                </StaggerItem>
+              ))}
+            </StaggerGroup>
+          </div>
+        ) : null}
       </Section>
 
       {/* ----------------------------------------------------- why choose us */}
@@ -351,10 +386,10 @@ export default async function HomePage() {
           <StaggerGroup className="space-y-5">
             {howWeWorkSteps.map((item) => (
               <StaggerItem key={item.step}>
-                <div className="flex gap-5 rounded-2xl border border-line bg-sand/60 p-6">
+                <div className="flex gap-4 rounded-2xl border border-line bg-sand/60 p-5 sm:gap-5 sm:p-6">
                   <span
                     aria-hidden
-                    className="font-heading text-3xl font-semibold text-cyprus/25"
+                    className="font-heading text-2xl font-semibold text-cyprus/25 sm:text-3xl"
                   >
                     {item.step}
                   </span>

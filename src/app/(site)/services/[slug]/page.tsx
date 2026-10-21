@@ -63,7 +63,12 @@ export default async function ServiceDetailPage({ params }: Params) {
   if (!service) notFound();
 
   const view = resolveSiteView(settings);
-  const related = services.filter((item) => item.id !== service.id).slice(0, 3);
+  // Prefer services from the same group so "Other services" stays relevant.
+  const others = services.filter((item) => item.id !== service.id);
+  const related = [
+    ...others.filter((item) => item.group === service.group),
+    ...others.filter((item) => item.group !== service.group),
+  ].slice(0, 3);
 
   return (
     <>

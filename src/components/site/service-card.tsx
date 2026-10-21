@@ -10,12 +10,19 @@ import { cn } from "@/lib/utils";
 export function ServiceCard({
   service,
   className,
+  surface = "cream",
 }: {
   service: Service;
   className?: string;
+  surface?: "cream" | "sand";
 }) {
   return (
-    <Card as="article" interactive className={cn("group flex h-full flex-col", className)}>
+    <Card
+      as="article"
+      interactive
+      surface={surface}
+      className={cn("group flex h-full flex-col", className)}
+    >
       <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-cyprus/8 text-cyprus">
         <ServiceIcon name={service.icon} className="h-6 w-6" />
       </span>

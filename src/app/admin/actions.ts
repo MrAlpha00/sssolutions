@@ -7,6 +7,7 @@ import { assertAdmin } from "@/lib/auth/session";
 import { CACHE_TAGS } from "@/lib/content";
 import { db } from "@/lib/db";
 import type { New } from "@/lib/db/types";
+import { normalizeServiceGroup } from "@/lib/service-groups";
 import type {
   ApplicationStatus,
   Faq,
@@ -69,6 +70,7 @@ export async function saveServiceAction(
     description,
     icon: str(fd, "icon") || "users",
     image_url: optStr(fd, "image_url"),
+    group: normalizeServiceGroup(str(fd, "group")),
     published: bool(fd, "published"),
     order_index: num(fd, "order_index"),
   };

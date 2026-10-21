@@ -13,6 +13,26 @@ export type Publishable = {
   order_index: number;
 };
 
+/**
+ * The two service groups shown on the public site.
+ *
+ * `hr`       — core Human Resources solutions.
+ * `business` — additional business & workforce support services.
+ */
+export const SERVICE_GROUPS = ["hr", "business"] as const;
+
+export type ServiceGroup = (typeof SERVICE_GROUPS)[number];
+
+/** Group used when a record has no group yet (older rows, un-migrated data). */
+export const DEFAULT_SERVICE_GROUP: ServiceGroup = "hr";
+
+export function isServiceGroup(value: unknown): value is ServiceGroup {
+  return (
+    typeof value === "string" &&
+    (SERVICE_GROUPS as readonly string[]).includes(value)
+  );
+}
+
 export interface Service extends BaseRecord, Publishable {
   slug: string;
   title: string;
@@ -20,6 +40,8 @@ export interface Service extends BaseRecord, Publishable {
   description: string;
   icon: string;
   image_url: string | null;
+  /** Which section of the services page this service is listed under. */
+  group: ServiceGroup;
 }
 
 export interface Partner extends BaseRecord {

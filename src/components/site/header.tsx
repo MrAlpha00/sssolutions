@@ -109,13 +109,7 @@ export function SiteHeader({
         )}
       >
         <div className="container-x flex h-[68px] items-center justify-between gap-3 lg:h-[76px]">
-          <Link
-            href="/"
-            aria-label={`${view.name} — home`}
-            className="shrink-0 rounded-lg"
-          >
-            <BrandLogo />
-          </Link>
+          <BrandLogo href="/" priority className="shrink-0" />
 
           <nav aria-label="Primary" className="hidden min-w-0 xl:block">
             <ul className="flex items-center gap-0.5 whitespace-nowrap">

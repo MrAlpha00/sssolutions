@@ -96,7 +96,7 @@ export function resolveSiteView(settings: SiteSettings): SiteView {
     calendlyUrl,
     social,
     hero: {
-      label: pick(settings.hero_label, "HR SOLUTIONS FOR A BETTER WORKPLACE"),
+      label: pick(settings.hero_label, "ONE PARTNER FOR YOUR ENTIRE WORKFORCE"),
       heading: pick(
         settings.hero_heading,
         "Building Strong Teams. Creating Better Workplaces.",

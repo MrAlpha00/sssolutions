@@ -4,24 +4,27 @@ import { randomUUID } from "node:crypto";
 
 import {
   defaultSettings,
+  LEGACY_HERO_LABELS,
+  seedBusinessServices,
   seedFaqs,
   seedPartners,
   seedPosts,
   seedServices,
 } from "@/lib/seed";
-import type {
-  ContactSubmission,
-  Faq,
-  ID,
-  Job,
-  JobApplication,
-  NewsletterSubscriber,
-  Partner,
-  Post,
-  Service,
-  SiteSettings,
-  Testimonial,
+import {
+  type ContactSubmission,
+  type Faq,
+  type ID,
+  type Job,
+  type JobApplication,
+  type NewsletterSubscriber,
+  type Partner,
+  type Post,
+  type Service,
+  type SiteSettings,
+  type Testimonial,
 } from "@/lib/types";
+import { normalizeServiceGroup } from "@/lib/service-groups";
 import {
   DuplicateSubscriberError,
   type DataStore,
@@ -49,16 +52,26 @@ interface LocalDb {
   contact_submissions: ContactSubmission[];
   newsletter_subscribers: NewsletterSubscriber[];
   job_applications: JobApplication[];
+  /**
+   * Slugs of bundled seed services an admin has deleted. Keeping them here
+   * means a deleted seed service is never silently restored on the next read.
+   */
+  dismissedSeedSlugs: string[];
 }
 
 const DATA_DIR = path.join(process.cwd(), ".data");
 const DB_FILE = path.join(DATA_DIR, "db.json");
 
+/** Every bundled seed service, in display order. */
+const seedServiceList: Service[] = [...seedServices, ...seedBusinessServices];
+
+const seedServiceSlugs = new Set(seedServiceList.map((s) => s.slug));
+
 function initialDb(): LocalDb {
   return {
     version: 1,
     settings: { ...defaultSettings },
-    services: [...seedServices],
+    services: [...seedServiceList],
     partners: [...seedPartners],
     testimonials: [],
     faqs: [...seedFaqs],
@@ -67,7 +80,55 @@ function initialDb(): LocalDb {
     contact_submissions: [],
     newsletter_subscribers: [],
     job_applications: [],
+    dismissedSeedSlugs: [],
   };
+}
+
+/** Fill in the group of services stored before groups existed. */
+function normalizeService(service: Service): Service {
+  return { ...service, group: normalizeServiceGroup(service.group) };
+}
+
+/**
+ * Replace hero eyebrows seeded by earlier versions of the site.
+ *
+ * The stored value is only overridden when it still matches one of the legacy
+ * labels — anything an admin has saved since is left untouched. This mirrors
+ * the rule applied by the Supabase migration
+ * `0003_service_groups_and_business_services.sql`.
+ */
+function normalizeHeroLabel(label: string | undefined | null): string {
+  const trimmed = (label ?? "").trim();
+  if (!trimmed) return defaultSettings.hero_label;
+  const isLegacy = LEGACY_HERO_LABELS.some(
+    (legacy) => legacy.toLowerCase() === trimmed.toLowerCase(),
+  );
+  return isLegacy ? defaultSettings.hero_label : trimmed;
+}
+
+/** Apply the hero-label rule to a settings object. */
+function normalizeSettings(settings: SiteSettings): SiteSettings {
+  return { ...settings, hero_label: normalizeHeroLabel(settings.hero_label) };
+}
+
+/**
+ * Merge the bundled seed catalogue into an existing database.
+ *
+ * Matching is done by slug so anything an admin created, renamed, edited,
+ * published or unpublished is left untouched. Only seed services that are
+ * completely unknown to the database are added, and only when they have not
+ * been explicitly deleted through the dashboard.
+ */
+function mergeSeedServices(
+  existing: Service[],
+  dismissed: string[],
+): Service[] {
+  const known = new Set(existing.map((s) => s.slug));
+  const dismissedSet = new Set(dismissed);
+  const additions = seedServiceList
+    .filter((s) => !known.has(s.slug) && !dismissedSet.has(s.slug))
+    .map(normalizeService);
+  return [...existing.map(normalizeService), ...additions];
 }
 
 // Serialise mutations so concurrent writes cannot corrupt the file.
@@ -85,7 +146,16 @@ async function readDb(): Promise<LocalDb> {
   try {
     const raw = await fs.readFile(DB_FILE, "utf8");
     const parsed = JSON.parse(raw) as Partial<LocalDb>;
-    return { ...initialDb(), ...parsed } as LocalDb;
+    const merged = { ...initialDb(), ...parsed } as LocalDb;
+    merged.services = mergeSeedServices(
+      Array.isArray(merged.services) ? merged.services : [],
+      Array.isArray(merged.dismissedSeedSlugs) ? merged.dismissedSeedSlugs : [],
+    );
+    merged.dismissedSeedSlugs = Array.isArray(merged.dismissedSeedSlugs)
+      ? merged.dismissedSeedSlugs
+      : [];
+    merged.settings = normalizeSettings(merged.settings);
+    return merged;
   } catch {
     const db = initialDb();
     await writeDb(db);
@@ -112,7 +182,10 @@ function byOrder<T extends { created_at: string; order_index?: number }>(
   return a.created_at.localeCompare(b.created_at);
 }
 
-type Collection = Exclude<keyof LocalDb, "version" | "settings">;
+type Collection = Exclude<
+  keyof LocalDb,
+  "version" | "settings" | "dismissedSeedSlugs"
+>;
 
 function list<T extends { created_at: string; order_index?: number }>(
   items: T[],
@@ -180,7 +253,11 @@ export const localStore: DataStore = {
   async updateSettings(patchInput) {
     return withLock(async () => {
       const db = await readDb();
-      db.settings = { ...defaultSettings, ...db.settings, ...patchInput };
+      db.settings = normalizeSettings({
+        ...defaultSettings,
+        ...db.settings,
+        ...patchInput,
+      });
       await writeDb(db);
       return db.settings;
     });
@@ -209,13 +286,35 @@ export const localStore: DataStore = {
   },
 
   async createService(input: New<Service>) {
-    return insert<Service>("services", input);
+    return insert<Service>("services", {
+      ...input,
+      group: normalizeServiceGroup(input.group),
+    } as New<Service>);
   },
   async updateService(id, input: Edit<Service>) {
-    return patch<Service>("services", id, input);
+    const patchInput: Edit<Service> = {
+      ...input,
+      ...(input.group !== undefined
+        ? { group: normalizeServiceGroup(input.group) }
+        : {}),
+    };
+    return patch<Service>("services", id, patchInput);
   },
   async deleteService(id) {
-    return remove("services", id);
+    return withLock(async () => {
+      const db = await readDb();
+      const target = db.services.find((s) => s.id === id);
+      if (!target) throw new Error("Service not found");
+      db.services = db.services.filter((s) => s.id !== id);
+      // Remember deleted seed services so they are not restored on next read.
+      if (
+        seedServiceSlugs.has(target.slug) &&
+        !db.dismissedSeedSlugs.includes(target.slug)
+      ) {
+        db.dismissedSeedSlugs.push(target.slug);
+      }
+      await writeDb(db);
+    });
   },
 
   async listPartners(opts: ListOptions = {}) {

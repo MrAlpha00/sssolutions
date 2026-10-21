@@ -7,16 +7,20 @@ export function Card({
   className,
   as: Tag = "div",
   interactive = false,
+  surface = "cream",
 }: {
   children: ReactNode;
   className?: string;
   as?: "div" | "article" | "li";
   interactive?: boolean;
+  /** Background tone of the card. `sand` is used to separate grouped sections. */
+  surface?: "cream" | "sand";
 }) {
   return (
     <Tag
       className={cn(
-        "rounded-2xl border border-line bg-cream p-6 shadow-[0_1px_2px_rgba(0,51,46,0.04)]",
+        "rounded-2xl border border-line p-6 shadow-[0_1px_2px_rgba(0,51,46,0.04)]",
+        surface === "sand" ? "bg-sand" : "bg-cream",
         interactive &&
           "transition-all duration-300 hover:-translate-y-1 hover:border-cyprus/25 hover:shadow-[0_24px_50px_-30px_rgba(0,51,46,0.45)]",
         className,

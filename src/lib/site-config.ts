@@ -123,14 +123,27 @@ export const mainNav = [
   { label: "Contact Us", href: "/contact" },
 ] as const;
 
-export const footerServiceLinks = [
-  { label: "Recruitment & Staffing", href: "/services/recruitment-and-staffing" },
-  { label: "Payroll & Benefits", href: "/services/payroll-and-benefits" },
-  { label: "HR Compliance", href: "/services/hr-compliance-management" },
-  { label: "Performance Management", href: "/services/performance-management" },
-  { label: "Employee Engagement", href: "/services/employee-engagement" },
-  { label: "Training & Development", href: "/services/training-and-development" },
-] as const;
+/**
+ * Footer service links, split into the same two groups the services page
+ * uses so visitors can tell the core HR services apart from the additional
+ * business & workforce support services.
+ */
+export const footerServiceLinks = {
+  hr: [
+    { label: "Recruitment & Staffing", href: "/services/recruitment-and-staffing" },
+    { label: "Payroll & Benefits", href: "/services/payroll-and-benefits" },
+    { label: "HR Compliance", href: "/services/hr-compliance-management" },
+    { label: "Performance Management", href: "/services/performance-management" },
+    { label: "Employee Engagement", href: "/services/employee-engagement" },
+    { label: "Training & Development", href: "/services/training-and-development" },
+  ],
+  business: [
+    { label: "Website Design & Development", href: "/services/website-design-and-development" },
+    { label: "Loading & Unloading Services", href: "/services/loading-and-unloading-services" },
+    { label: "Security Services", href: "/services/security-services" },
+    { label: "Housekeeping Services", href: "/services/housekeeping-services" },
+  ],
+} as const;
 
 export const footerQuickLinks = [
   { label: "Home", href: "/" },

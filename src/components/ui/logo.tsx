@@ -1,61 +1,81 @@
+import Image from "next/image";
+import Link from "next/link";
+
 import { cn } from "@/lib/utils";
 
 /**
  * Brand treatment.
  *
- * NOTE: The client's real logo (from the supplied business card) has not yet
- * been provided. This is a restrained SS monogram placeholder in the brand
- * colours — it does NOT attempt to recreate the company's actual logo. Replace
- * `<Mark />` with the supplied asset at `public/brand/logo.svg` (or .png)
- * before launch. See README → "Logo and image assets".
+ * The logo is rendered from the transparent PNG lockups in `public/brand`:
+ * - `logo.png`       — dark lockup (Cyprus mark + Cyprus wordmark) for light
+ *                      backgrounds such as the header.
+ * - `logo-light.png` — inverted lockup (sand mark + sand wordmark) for the
+ *                      dark Cyprus footer.
+ * - `icon.png`       — square mark only, used for compact placements and as
+ *                      the app-router icon / favicon.
+ *
+ * The intrinsic sizes are always declared so the browser can reserve the right
+ * space and the artwork is never stretched or upscaled. To swap in the
+ * client's own artwork, replace the files in `public/brand` (keeping the same
+ * aspect ratio) or update the constants below.
  */
-function Mark({ className }: { className?: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cyprus font-heading text-[0.95rem] font-semibold tracking-[0.02em] text-sand",
-        className,
-      )}
-    >
-      SS
-    </span>
-  );
-}
+
+const LOCKUP = { width: 847, height: 240 } as const;
+const MARK = { width: 512, height: 512 } as const;
+
+const brandAssets = {
+  dark: "/brand/logo.png",
+  light: "/brand/logo-light.png",
+} as const;
 
 export function BrandLogo({
   tone = "dark",
   className,
   compact = false,
+  href,
+  priority = false,
 }: {
   tone?: "dark" | "light";
   className?: string;
+  /** Render the square mark only (no horizontal wordmark). */
   compact?: boolean;
+  /** When set the logo becomes a link to this address. */
+  href?: string;
+  priority?: boolean;
 }) {
+  const content = compact ? (
+    <Image
+      src="/brand/icon.png"
+      alt="Supportive HR Solutions"
+      width={MARK.width}
+      height={MARK.height}
+      sizes="48px"
+      className="h-10 w-10 object-contain"
+      priority={priority}
+    />
+  ) : (
+    <Image
+      src={brandAssets[tone]}
+      alt="Supportive HR Solutions"
+      width={LOCKUP.width}
+      height={LOCKUP.height}
+      sizes="(min-width: 1024px) 172px, 140px"
+      className="h-9 w-auto object-contain sm:h-10"
+      priority={priority}
+    />
+  );
+
+  if (!href) {
+    return <span className={cn("inline-flex items-center", className)}>{content}</span>;
+  }
+
   return (
-    <span className={cn("flex items-center gap-3", className)}>
-      <Mark />
-      {!compact ? (
-        <span className="flex flex-col leading-none">
-          <span
-            className={cn(
-              "font-heading text-base font-semibold tracking-tight sm:text-lg",
-              tone === "dark" ? "text-cyprus" : "text-sand",
-            )}
-          >
-            Supportive HR
-          </span>
-          <span
-            className={cn(
-              "mt-1 text-[0.68rem] font-medium uppercase tracking-[0.22em]",
-              tone === "dark" ? "text-muted" : "text-sand/70",
-            )}
-          >
-            Solutions
-          </span>
-        </span>
-      ) : null}
-      <span className="sr-only">Supportive HR Solutions</span>
-    </span>
+    <Link
+      href={href}
+      aria-label="Supportive HR Solutions — home"
+      className={cn("inline-flex items-center rounded-lg", className)}
+    >
+      {content}
+    </Link>
   );
 }
