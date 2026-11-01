@@ -61,8 +61,8 @@ export const metadata = createMetadata({
  * update this constant (and the intrinsic width/height below).
  */
 const HERO_IMAGE_SRC = "/images/team.png";
-const HERO_IMAGE_WIDTH = 1515;
-const HERO_IMAGE_HEIGHT = 1067;
+const HERO_IMAGE_WIDTH = 1536;
+const HERO_IMAGE_HEIGHT = 1024;
 
 const reasons = [
   {
@@ -128,7 +128,7 @@ export default async function HomePage() {
           className="absolute -left-28 bottom-0 h-64 w-64 rounded-full bg-cyprus/5 blur-3xl"
         />
 
-        <div className="container-x relative grid items-center gap-12 py-14 lg:grid-cols-[55fr_45fr] lg:gap-16 lg:py-20">
+        <div className="container-x relative grid items-center gap-12 py-14 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-10 lg:py-20">
           {/* On small screens the cutout comes first so the visitor sees the
               team immediately; from `lg` up the copy returns to the left. */}
           <div className="order-2 lg:order-1">
@@ -178,11 +178,14 @@ export default async function HomePage() {
           {/* Hero image — a transparent cutout of four HR professionals. The
               decorative green shapes sit behind it and the cutout simply
               overlaps them, so there is no card, frame, or boxed background.
-              The image is never stretched: it is width-constrained and
-              scaled with `object-contain` so the aspect ratio is preserved. */}
+              On desktop the wrapper is bottom-aligned and allowed to fill the
+              right half of the hero (plus the surrounding gutter), so the team
+              stands on the bottom edge of the sand panel rather than floating
+              in the middle. The image is never stretched: it keeps its aspect
+              ratio and uses `object-contain`. */}
           <Reveal
             variants={scaleIn}
-            className="relative order-1 w-full lg:order-2 lg:justify-self-end"
+            className="relative order-1 w-full lg:order-2 lg:-mb-20 lg:-mr-8 lg:w-[calc(100%+4.5rem)] lg:max-w-none lg:justify-self-end"
           >
             <span
               aria-hidden
@@ -190,7 +193,7 @@ export default async function HomePage() {
             />
             <span
               aria-hidden
-              className="hero-arch absolute bottom-4 left-1/2 h-2/3 w-3/4 -translate-x-1/2 bg-cyprus/8"
+              className="hero-arch absolute bottom-0 left-1/2 h-[72%] w-[78%] -translate-x-1/2 bg-cyprus/8"
             />
             <Image
               src={HERO_IMAGE_SRC}
@@ -198,8 +201,8 @@ export default async function HomePage() {
               width={HERO_IMAGE_WIDTH}
               height={HERO_IMAGE_HEIGHT}
               quality={90}
-              sizes="(min-width: 1024px) 44vw, (min-width: 640px) 80vw, 92vw"
-              className="relative z-10 mx-auto h-auto w-full max-w-[23rem] object-contain sm:max-w-[30rem] lg:max-w-[34rem]"
+              sizes="(min-width: 1024px) 660px, (min-width: 640px) 80vw, 92vw"
+              className="relative z-10 mx-auto h-auto w-full max-w-[23rem] object-contain sm:max-w-[30rem] lg:max-w-none"
               preload
             />
           </Reveal>
