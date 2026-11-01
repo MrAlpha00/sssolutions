@@ -120,6 +120,7 @@ export const mainNav = [
   { label: "Partners", href: "/#clients" },
   { label: "Testimonials", href: "/#testimonials" },
   { label: "Resources", href: "/resources" },
+  { label: "Careers", href: "/careers" },
   { label: "Contact Us", href: "/contact" },
 ] as const;
 
@@ -152,6 +153,7 @@ export const footerQuickLinks = [
   { label: "Why Choose Us", href: "/#why-choose-us" },
   { label: "Clients / Partners", href: "/#clients" },
   { label: "Testimonials", href: "/#testimonials" },
+  { label: "Careers", href: "/careers" },
   { label: "Contact Us", href: "/contact" },
 ] as const;
 

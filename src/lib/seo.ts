@@ -88,7 +88,6 @@ export const rootMetadata: Metadata = {
     card: "summary_large_image",
     images: [ogImage.url],
   },
-  icons: { icon: "/favicon.ico" },
 };
 
 /* --------------------------------------------------------------- JSON-LD ---- */
