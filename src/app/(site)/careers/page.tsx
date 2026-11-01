@@ -130,11 +130,13 @@ export default async function CareersPage({
 
           <Card className="p-6 sm:p-8">
             <ApplicationForm
+              key={defaultJobId ?? "general"}
               jobs={jobs.map((job) => ({
                 id: job.id,
                 title: job.title,
                 location: job.location,
               }))}
+              defaultJobId={defaultJobId}
               turnstileSiteKey={turnstileSiteKey}
             />
           </Card>
