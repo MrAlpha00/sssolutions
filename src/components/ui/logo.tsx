@@ -7,10 +7,10 @@ import { cn } from "@/lib/utils";
  * Brand treatment.
  *
  * The logo is rendered from the transparent PNG lockups in `public/brand`:
- * - `logo.png`       — dark lockup (Cyprus mark + Cyprus wordmark) for light
- *                      backgrounds such as the header.
+ * - `Supportive HR Solutions Tree Logo.png` — full-colour tree/SS symbol and
+ *   wordmark for light backgrounds such as the header.
  * - `logo-light.png` — inverted lockup (sand mark + sand wordmark) for the
- *                      dark Cyprus footer.
+ *   dark Cyprus footer.
  * - `icon.png`       — square mark only, used for compact placements and as
  *                      the app-router icon / favicon.
  *
@@ -20,11 +20,12 @@ import { cn } from "@/lib/utils";
  * aspect ratio) or update the constants below.
  */
 
-const LOCKUP = { width: 847, height: 240 } as const;
+const TREE_LOCKUP = { width: 2057, height: 764 } as const;
+const LEGACY_LOCKUP = { width: 847, height: 240 } as const;
 const MARK = { width: 512, height: 512 } as const;
 
 const brandAssets = {
-  dark: "/brand/logo.png",
+  dark: "/brand/Supportive HR Solutions Tree Logo.png",
   light: "/brand/logo-light.png",
 } as const;
 
@@ -54,12 +55,22 @@ export function BrandLogo({
       className="h-10 w-10 object-contain"
       preload={preload}
     />
+  ) : tone === "dark" ? (
+    <Image
+      src={brandAssets.dark}
+      alt="Supportive HR Solutions"
+      width={TREE_LOCKUP.width}
+      height={TREE_LOCKUP.height}
+      sizes="(min-width: 1024px) 185px, 145px"
+      className="h-auto w-[145px] object-contain lg:w-[185px]"
+      preload={preload}
+    />
   ) : (
     <Image
-      src={brandAssets[tone]}
+      src={brandAssets.light}
       alt="Supportive HR Solutions"
-      width={LOCKUP.width}
-      height={LOCKUP.height}
+      width={LEGACY_LOCKUP.width}
+      height={LEGACY_LOCKUP.height}
       sizes="(min-width: 640px) 141px, 127px"
       className="h-9 w-auto object-contain sm:h-10"
       preload={preload}

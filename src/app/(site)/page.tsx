@@ -42,7 +42,6 @@ import {
 } from "@/lib/content";
 import { env } from "@/lib/env";
 import { createMetadata } from "@/lib/seo";
-import { groupServices, serviceSections } from "@/lib/service-groups";
 import { howWeWorkSteps, siteConfig } from "@/lib/site-config";
 import { resolveSiteView } from "@/lib/site-view";
 
@@ -110,7 +109,6 @@ export default async function HomePage() {
     ]);
 
   const view = resolveSiteView(settings);
-  const { hr: hrServices, business: businessServices } = groupServices(services);
   const latestPosts = posts.slice(0, 3);
   const turnstileSiteKey = env.turnstileSiteKey ?? "";
 
@@ -302,8 +300,8 @@ export default async function HomePage() {
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading
             eyebrow="What we do"
-            title="HR services built around your business"
-            description="From hiring the right person to keeping records and policies in order, our services can stand alone or work together as ongoing HR support."
+            title="Services built around your business"
+            description="From hiring and payroll to site operations and digital support, our services can stand alone or work together as ongoing support."
           />
           <Reveal>
             <ButtonLink href="/services" variant="secondary">
@@ -313,39 +311,12 @@ export default async function HomePage() {
           </Reveal>
         </div>
         <StaggerGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {hrServices.map((service) => (
+          {services.map((service) => (
             <StaggerItem key={service.id} className="h-full">
               <ServiceCard service={service} />
             </StaggerItem>
           ))}
         </StaggerGroup>
-
-        {/* The additional business services are shown as their own, clearly
-            different band rather than as another row of identical cards. */}
-        {businessServices.length > 0 ? (
-          <div className="mt-16 rounded-3xl border border-line bg-sand p-6 sm:p-10">
-            <Reveal>
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-                <SectionHeading
-                  eyebrow="Also available"
-                  title={serviceSections[1].title}
-                  description={serviceSections[1].description}
-                />
-                <ButtonLink href="/services" variant="secondary">
-                  See all services
-                  <ArrowRight className="h-4 w-4" />
-                </ButtonLink>
-              </div>
-            </Reveal>
-            <StaggerGroup className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {businessServices.map((service) => (
-                <StaggerItem key={service.id} className="h-full">
-                  <ServiceCard service={service} />
-                </StaggerItem>
-              ))}
-            </StaggerGroup>
-          </div>
-        ) : null}
       </Section>
 
       {/* ----------------------------------------------------- why choose us */}
