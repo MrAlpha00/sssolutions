@@ -122,8 +122,8 @@ Two interchangeable stores implement the same interface (`src/lib/db/types.ts`):
    not configured. Data is persisted to `.data/db.json` and resumes to
    `.data/uploads/` (both git-ignored). This is a real, persistent store — the admin
    dashboard is fully functional, not a mock.
-2. **Supabase store** (`src/lib/db/supabase.ts`) — used as soon as
-   `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set.
+2. **Supabase store** (`src/lib/db/supabase.ts`) - used as soon as
+   `NEXT_PUBLIC_SUPABASE_URL` and either Supabase key are set.
 
 ### Moving to Supabase
 
