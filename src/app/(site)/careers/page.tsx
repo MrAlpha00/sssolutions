@@ -19,8 +19,17 @@ export const metadata = createMetadata({
   path: "/careers",
 });
 
-export default async function CareersPage() {
-  const [jobs, settings] = await Promise.all([getJobs(), getSettings()]);
+export default async function CareersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ job?: string }>;
+}) {
+  const [{ job }, jobs, settings] = await Promise.all([
+    searchParams,
+    getJobs(),
+    getSettings(),
+  ]);
+  const defaultJobId = jobs.some((item) => item.id === job) ? job : undefined;
   const view = resolveSiteView(settings);
   const turnstileSiteKey = env.turnstileSiteKey ?? "";
 
