@@ -311,6 +311,7 @@ export async function saveJobAction(
     return { ok: false, error: (error as Error).message };
   }
   touch(CACHE_TAGS.jobs);
+  revalidatePath("/careers");
   redirect("/admin/jobs");
 }
 
@@ -318,6 +319,7 @@ export async function deleteJobAction(fd: FormData): Promise<void> {
   await assertAdmin();
   await db.deleteJob(id(fd));
   touch(CACHE_TAGS.jobs);
+  revalidatePath("/careers");
 }
 
 export async function toggleJobAction(fd: FormData): Promise<void> {
@@ -326,6 +328,7 @@ export async function toggleJobAction(fd: FormData): Promise<void> {
   const job = all.find((x) => x.id === id(fd));
   if (job) await db.updateJob(job.id, { published: !job.published });
   touch(CACHE_TAGS.jobs);
+  revalidatePath("/careers");
 }
 
 /* ------------------------------------------------------------------ enquiries */
