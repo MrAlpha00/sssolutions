@@ -1,4 +1,5 @@
 import { ArrowRight, Briefcase, MapPin } from "lucide-react";
+import { Suspense } from "react";
 
 import { ButtonLink } from "@/components/ui/button";
 import { Card, EmptyState } from "@/components/ui/card";
@@ -19,19 +20,56 @@ export const metadata = createMetadata({
   path: "/careers",
 });
 
+type ApplicationJob = { id: string; title: string; location: string };
+
+async function CareersApplicationForm({
+  jobs,
+  searchParams,
+  turnstileSiteKey,
+}: {
+  jobs: ApplicationJob[];
+  searchParams: Promise<{ job?: string }>;
+  turnstileSiteKey: string;
+}) {
+  const { job } = await searchParams;
+  const defaultJobId = jobs.some((item) => item.id === job) ? job : undefined;
+
+  return (
+    <ApplicationForm
+      key={defaultJobId ?? "general"}
+      jobs={jobs}
+      defaultJobId={defaultJobId}
+      turnstileSiteKey={turnstileSiteKey}
+    />
+  );
+}
+
+function ApplicationFormFallback() {
+  return (
+    <div className="space-y-4" aria-hidden>
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div
+          key={index}
+          className="h-11 animate-pulse rounded-xl bg-line/40"
+        />
+      ))}
+    </div>
+  );
+}
+
 export default async function CareersPage({
   searchParams,
 }: {
   searchParams: Promise<{ job?: string }>;
 }) {
-  const [{ job }, jobs, settings] = await Promise.all([
-    searchParams,
-    getJobs(),
-    getSettings(),
-  ]);
-  const defaultJobId = jobs.some((item) => item.id === job) ? job : undefined;
+  const [jobs, settings] = await Promise.all([getJobs(), getSettings()]);
   const view = resolveSiteView(settings);
   const turnstileSiteKey = env.turnstileSiteKey ?? "";
+  const applicationJobs = jobs.map((job) => ({
+    id: job.id,
+    title: job.title,
+    location: job.location,
+  }));
 
   return (
     <>
@@ -129,16 +167,13 @@ export default async function CareersPage({
           </div>
 
           <Card className="p-6 sm:p-8">
-            <ApplicationForm
-              key={defaultJobId ?? "general"}
-              jobs={jobs.map((job) => ({
-                id: job.id,
-                title: job.title,
-                location: job.location,
-              }))}
-              defaultJobId={defaultJobId}
-              turnstileSiteKey={turnstileSiteKey}
-            />
+            <Suspense fallback={<ApplicationFormFallback />}>
+              <CareersApplicationForm
+                jobs={applicationJobs}
+                searchParams={searchParams}
+                turnstileSiteKey={turnstileSiteKey}
+              />
+            </Suspense>
           </Card>
         </div>
       </Section>
