@@ -43,9 +43,15 @@ export const env = {
   adminSessionSecret: clean(process.env.ADMIN_SESSION_SECRET),
 } as const;
 
-/** True when the Supabase public client can be created. */
+/**
+ * True when Supabase is configured. The server-side service-role key is enough
+ * for the application's data access, so do not silently fall back to the local
+ * store when only that key is present.
+ */
 export function isSupabaseConfigured(): boolean {
-  return Boolean(env.supabaseUrl && env.supabaseAnonKey);
+  return Boolean(
+    env.supabaseUrl && (env.supabaseAnonKey || env.supabaseServiceRoleKey),
+  );
 }
 
 /** True when privileged (server-side, RLS-bypassing) Supabase access is available. */
