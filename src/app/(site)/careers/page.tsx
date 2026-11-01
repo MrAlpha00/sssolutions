@@ -80,6 +80,16 @@ export default async function CareersPage({
                       </div>
                     </div>
                   ) : null}
+                  <div className="mt-6">
+                    <ButtonLink
+                      href={`/careers?job=${encodeURIComponent(job.id)}#apply`}
+                      variant="secondary"
+                      size="sm"
+                    >
+                      Apply now
+                      <ArrowRight className="h-4 w-4" aria-hidden />
+                    </ButtonLink>
+                  </div>
                 </Card>
               ))}
             </ul>
@@ -87,12 +97,17 @@ export default async function CareersPage({
             <EmptyState
               title="No open roles right now"
               description="We do not have any advertised vacancies at the moment, but we are always happy to receive a general application from people who share our approach to HR."
+              action={
+                <ButtonLink href="/contact" variant="secondary" size="sm">
+                  Contact Us
+                </ButtonLink>
+              }
             />
           )}
         </div>
       </Section>
 
-      <Section tone="cream">
+      <Section tone="cream" id="apply">
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <Eyebrow>Apply</Eyebrow>
